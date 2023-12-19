@@ -1,65 +1,29 @@
 pipeline {
     agent any
-    environment {
-        // Define las variables de entorno para usar en los pasos.
-        BUILD_OUTPUT = 'build_output.txt'
-        TEST_OUTPUT = 'test_output.txt'
-        DEPLOY_OUTPUT = 'deploy_output.txt'
-    }
     stages {
-        stage('Preparation') {
-            steps {
-                // Limpiar o preparar el entorno de trabajo
-                bat 'echo Preparing the environment > %BUILD_OUTPUT%'
-                bat 'del %TEST_OUTPUT% %DEPLOY_OUTPUT%, 2>nul'
-            }
-        }
         stage('Build') {
             steps {
-                // Simular un proceso de construcción
-                bat 'echo Building the project >> %BUILD_OUTPUT%'
-                bat 'echo Build successful >> %BUILD_OUTPUT%'
+                script {
+                    bat 'echo Compiling the project... > build_output.txt'
+                    bat 'echo Build successful >> build_output.txt'
+                }
             }
         }
         stage('Test') {
             steps {
-                // Simular la ejecución de pruebas
-                bat 'echo Running tests > %TEST_OUTPUT%'
-                bat 'echo Tests passed >> %TEST_OUTPUT%'
+                script {
+                    bat 'echo Running tests... > test_output.txt'
+                    bat 'echo Tests passed >> test_output.txt'
+                }
             }
         }
         stage('Deploy') {
             steps {
-                // Simular un proceso de despliegue
-                bat 'echo Deploying to server > %DEPLOY_OUTPUT%'
-                bat 'echo Deploy successful >> %DEPLOY_OUTPUT%'
-            }
-        }
-        stage('Cleanup') {
-            steps {
-                // Limpiar los archivos temporales si es necesario
                 script {
-                    if (currentBuild.result == 'SUCCESS') {
-                        bat 'echo Cleanup successful'
-                    } else {
-                        bat 'echo Skipping cleanup due to build failure'
-                    }
+                    bat 'echo Deploying to server... > deploy_output.txt'
+                    bat 'echo Deploy successful >> deploy_output.txt'
                 }
             }
-        }
-    }
-    post {
-        always {
-            // Acciones para ejecutar después de completar los stages, independientemente del resultado
-            echo 'Pipeline completed.'
-        }
-        success {
-            // Acciones específicas si el pipeline fue exitoso
-            echo 'Success! All stages completed successfully.'
-        }
-        failure {
-            // Acciones específicas si el pipeline falló
-            echo 'Failure encountered. Check the logs for details.'
         }
     }
 }
